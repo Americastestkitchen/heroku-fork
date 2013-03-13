@@ -5,7 +5,7 @@ Fork Heroku apps
 ## Installation
 
 ```console
-$ heroku plugins:install https://github.com/heroku/heroku-fork
+$ heroku plugins:install https://github.com/heroku/heroku-fork.git
 ```
 
 ## Usage
