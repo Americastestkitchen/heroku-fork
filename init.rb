@@ -58,23 +58,6 @@ class Heroku::Command::Apps < Heroku::Command::Base
       rescue Heroku::API::Errors::NotFound
         puts "skipped (not found)"
       end
-      if addon["name"] =~ /^heroku-postgresql:/
-        from_var_name = "#{addon["attachment_name"]}_URL"
-        from_attachment = to_addon["message"].match(/Attached as (\w+)_URL\n/)[1]
-        if from_config[from_var_name] == from_config["DATABASE_URL"]
-          from_config["DATABASE_URL"] = api.get_config_vars(to).body["#{from_attachment}_URL"]
-        end
-        from_config.delete(from_var_name)
-
-        plan = addon["name"].split(":").last
-        unless %w(dev basic).include? plan
-          wait_for_db to, to_addon
-        end
-
-        check_for_pgbackups! from
-        check_for_pgbackups! to
-        migrate_db addon, from, to_addon, to
-      end
     end
 
     to_config = api.get_config_vars(to).body
